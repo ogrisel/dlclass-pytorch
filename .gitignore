@@ -1,0 +1,8 @@
+notebooks/.ipynb_checkpoints/
+notebooks/VOCdevkit/
+notebooks/VOCtrainval_06-Nov-2007.tar
+notebooks/*.model
+notebooks/*.jpg
+notebooks/*.json
+notebooks/ml-100k.zip
+notebooks/ml-100k/
