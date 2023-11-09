@@ -1,6 +1,6 @@
 class: center, middle
 
-# Convolutional Neural Networks for Semantic or Instance Segmentation
+# Convolutional Neural Networks for Object Detection and Segmentation
 
 Olivier Grisel (olivier.grisel@inria.fr)
 

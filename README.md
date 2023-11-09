@@ -1,7 +1,32 @@
 # PyTorch version of my Deep Learning class
 
-The original version written in collaboration with Charles Ollion with the tensorflow / Keras library
-is still available at:
+## Slides
+
+- [Convolutional Neural Networks for Object Detection and Segmentation](https://ogrisel.github.io/dlclass-pytorch/slides/convnets_detection_segmentation)
+- ... more to come
+
+## Notebooks
+
+Either:
+
+```
+git clone https://github.com/ogrisel/dlclass-pytorch
+cd notebooks
+jupyter lab
+```
+
+or via google colab:
+
+- https://colab.research.google.com/github/ogrisel/dlclass-pytorch
+
+You can also import individual notebooks from the
+`https://github.com/ogrisel/dlclass-pytorch`` repository into other notebook
+services such has [Kaggle Code](https://www.kaggle.com/code) for instance.
+
+## Credits
+
+The original version written in collaboration with Charles Ollion with the
+tensorflow / Keras library is still available at:
 
 https://m2dsupsdlclass.github.io/lectures-labs/
 
