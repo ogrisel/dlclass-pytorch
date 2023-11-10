@@ -3,6 +3,7 @@
 ## Slides
 
 - [Convolutional Neural Networks for Object Detection and Segmentation](https://ogrisel.github.io/dlclass-pytorch/slides/convnets_detection_segmentation)
+- [Recommender Systems](https://ogrisel.github.io/dlclass-pytorch/slides/recsys)
 - ... more to come
 
 ## Notebooks
