@@ -20,7 +20,7 @@ or via google colab:
 - https://colab.research.google.com/github/ogrisel/dlclass-pytorch
 
 You can also import individual notebooks from the
-`https://github.com/ogrisel/dlclass-pytorch`` repository into other notebook
+[`https://github.com/ogrisel/dlclass-pytorch`](https://github.com/ogrisel/dlclass-pytorch) repository into other notebook
 services such has [Kaggle Code](https://www.kaggle.com/code) for instance.
 
 ## Credits
