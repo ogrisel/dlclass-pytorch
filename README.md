@@ -4,6 +4,9 @@
 - [Convolutional Neural Networks for Object Detection](https://ogrisel.github.io/dlclass-pytorch/slides/convnets_detection)
 - [Convolutional Neural Networks for Semantic and Instance Segmentation](https://ogrisel.github.io/dlclass-pytorch/slides/convnets_segmentation)
 - [Recommender Systems](https://ogrisel.github.io/dlclass-pytorch/slides/recsys)
+- [NLP - Word Embeddings](https://ogrisel.github.io/dlclass-pytorch/slides/nlp-word-embeddings)
+- [NLP - Language Modeling with Recurrent Neural Networks](https://ogrisel.github.io/dlclass-pytorch/slides/nlp-recurrent-networks)
+- [NLP - Attention Mechanisms and Transformers](https://ogrisel.github.io/dlclass-pytorch/slides/nlp-transformers)
 - ... more to come
 
 ## Notebooks
