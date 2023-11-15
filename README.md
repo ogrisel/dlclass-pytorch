@@ -1,8 +1,8 @@
 # PyTorch version of my Deep Learning class
 
 ## Slides
-
-- [Convolutional Neural Networks for Object Detection and Segmentation](https://ogrisel.github.io/dlclass-pytorch/slides/convnets_detection_segmentation)
+- [Convolutional Neural Networks for Object Detection](https://ogrisel.github.io/dlclass-pytorch/slides/convnets_detection)
+- [Convolutional Neural Networks for Semantic and Instance Segmentation](https://ogrisel.github.io/dlclass-pytorch/slides/convnets_segmentation)
 - [Recommender Systems](https://ogrisel.github.io/dlclass-pytorch/slides/recsys)
 - ... more to come
 
