@@ -1,10 +1,10 @@
-# Natural Language Processing with Deep Learning
+# Natural Language Processing with Word Embeddings
 
-Charles Ollion - Olivier Grisel
+Olivier Grisel
 
-Source material:
+`olivier.grisel@inria.fr`
 
-https://m2dsupsdlclass.github.io/lectures-labs/slides/06_deep_nlp/index.html
+Adapted from [Charles Ollion and Olivier Grisel](https://github.com/m2dsupsdlclass/lectures-labs)
 
 ---
 ## Natural Language Processing

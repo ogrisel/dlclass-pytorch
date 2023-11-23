@@ -4,9 +4,11 @@ class: center, middle
 
 Olivier Grisel
 
-Derived from work by Charles Ollion
+`olivier.grisel@inria.fr`
 
-https://m2dsupsdlclass.github.io/lectures-labs/
+`olivier.grisel@inria.fr`
+
+Adapted from [Charles Ollion and Olivier Grisel](https://github.com/m2dsupsdlclass/lectures-labs)
 
 ---
 ## Reminder: Recurrent Neural Networks
