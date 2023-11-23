@@ -7,7 +7,6 @@
 - [NLP - Word Embeddings](https://ogrisel.github.io/dlclass-pytorch/slides/nlp-word-embeddings)
 - [NLP - Language Modeling with Recurrent Neural Networks](https://ogrisel.github.io/dlclass-pytorch/slides/nlp-recurrent-networks)
 - [NLP - Attention Mechanisms and Transformers](https://ogrisel.github.io/dlclass-pytorch/slides/nlp-transformers)
-- ... more to come
 
 ## Notebooks
 
