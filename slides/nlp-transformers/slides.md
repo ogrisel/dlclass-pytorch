@@ -12,7 +12,7 @@ https://m2dsupsdlclass.github.io/lectures-labs/
 ## Reminder: Recurrent Neural Networks
 
 .center[
-          <img src="../lesson9/images/unrolled_rnn_one_output_2.svg" style="width: 600px;" />
+          <img src="../nlp-recurrent-networks/images/unrolled_rnn_one_output_2.svg" style="width: 600px;" />
 ]
 
 --
