@@ -447,19 +447,18 @@ Slide from Thomas Wolf (HuggingFace)
 
 - Seq2Seq: variable number of input and ouput tokens
 
-- Decoder-only vs Encoder-Decoder
+- Architecture variants:
+  - Encoder-decoder: Attention is all you need
+  - Decoder-only: GPT and most recent LLMs
+  - "Encoder-only": BERT and co
 
 - Decoder always trained by **Teacher Forcing**
 
-- Can use either RNN or **Transformers** with *causal* attention
+- Can use either RNN or **Transformers** with *causal* attention in the decoder
 
 - Pretraining:
-  - Autogressive language modeling (GPT)
-  - Masked language modeling (BERT)
+  - Autogressive language modeling (GPT and derivatives)
+  - Masked language modeling (BERT and derivatives)
 
----
-class: middle, center
-
-# Lab 5: back here in 15 min!
 
 
