@@ -95,28 +95,8 @@ Ronneberger, Olaf et al., "U-Net: Convolutional Networks for Biomedical Image Se
 - **Skip connections** between corresponding convolution and deconvolution layers
 
 
-
 ---
-# Hourglass network
-
-.center[
-          <img src="images/hourglass.png" style="width: 650px;" />
-]
-
-.footnote.small[
-Newell, Alejandro, et al. "Stacked Hourglass Networks for Human Pose Estimation." ECCV 2016
-]
-
---
-- U-Net like architectures repeated sequentially
---
-
-- Each block refines the segmentation for the following
-- Each block has a segmentation loss
-
-
----
-## Mask-RCNN
+# Semantic Segmentation with Mask-RCNN
 
 .center[
           <img src="images/maskrcnn.png" style="width: 760px;" />
@@ -130,7 +110,7 @@ K. He and al. Mask Region-based Convolutional Network (Mask R-CNN) NIPS 2017
 
 Faster-RCNN architecture with a third, binary mask head
 ---
-# Results
+# Semantic Segmentation with Mask-RCNN
 
 .center[
           <img src="images/maskrcnnresults.png" style="width: 760px;" />
@@ -146,7 +126,8 @@ K. He and al. Mask Region-based Convolutional Network (Mask R-CNN) NIPS 2017
 - Excellent instance generalization
 
 ---
-## Results
+# Semantic Segmentation with Mask-RCNN
+
 
 .center[
           <img src="images/maskrcnnresults2.png" style="width: 760px;" />
@@ -168,15 +149,9 @@ https://paperswithcode.com/area/computer-vision
 
 <br/>
 
-### Tensorflow
-
-[object detection API](https://github.com/tensorflow/models/tree/master/research/object_detection)
-
---
-
 ### Pytorch
 
-Detectron https://github.com/facebookresearch/Detectron
+Detectron2 https://github.com/facebookresearch/detectron2
 
 - Mask-RCNN, Retina Net and other architectures
 - Focal loss, Feature Pyramid Networks, etc.
