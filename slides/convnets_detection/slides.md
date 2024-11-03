@@ -285,21 +285,22 @@ Single stage detector with:
 See this [post](https://towardsdatascience.com/review-retinanet-focal-loss-object-detection-38fba6afabe4) for more information
 
 ---
-# Box Proposals
+# Box proposals
 
 Instead of having a predefined set of box proposals, find them on the image:
-- **Selective Search** - from pixels (not learnt, no longer used)
-- **Faster - RCNN** - Region Proposal Network (RPN)
 
-.footnote.small[
-Girshick, Ross, et al. "Fast r-cnn." ICCV 2015
-]
+**Region Proposal Network**
+
+- Inputs:
+  - coarse convolutional feature map
+  - number $N$ of regions of interest
+- Output: tensor of $N$ box coordinates and objectness scores at each location in the feature map
+
 --
 
-**Crop-and-resize** operator (**RoI-Pooling**):
-- Input: convolutional map + $N$ regions of interest
-- Output: tensor of $N \times 7 \times 7 \times \text{depth}$ boxes
-- Allows to propagate gradient only on interesting regions, and efficient computation
+**Crop-and-resize** the feature map to feed positively classified boxes to a classification network
+- Using a dedicated "RoI pooling" / "RoI align" layer
+- Allows to propagate gradient only on interesting regions
 
 ---
 # Faster-RCNN
@@ -314,13 +315,11 @@ Ren, Shaoqing, et al. "Faster r-cnn: Towards real-time object detection with reg
 
 --
 
-- Train jointly **RPN** and other head
+- Train jointly **RPN** and the classification head
 
 --
 - 200 box proposals, gradient propagated only in positive boxes
 
---
-- Region proposal is translation invariant, compared to YOLO
 
 ???
 Region proposal input is a fully convolutional network: shares weights across spatial dimensions
@@ -334,6 +333,8 @@ Region proposal input is a fully convolutional network: shares weights across sp
 
 Measures: mean Average Precision **mAP** at given **IoU** thresholds
 
+- Average Precision: area under the Precision-Recall curve for one class and on IoU threshold.
+
 .footnote.small[
 Zeming Li et al. Light-Head R-CNN: In Defense of Two-Stage Object Detector 2017
 ]
@@ -342,56 +343,15 @@ Zeming Li et al. Light-Head R-CNN: In Defense of Two-Stage Object Detector 2017
 
 - AP @0.5 for class "cat": average precision for the class, where $IoU(box^{pred}, box^{true}) > 0.5$
 
+--
+
+- mAP: average AP values for all classes.
+
 ---
 ## State-of-the-art
 
-.center[
-          <img src="images/sotaresults3.png" style="width: 600px;" />
-]
-
-.footnote.small[
-Ghiasi G. et al. Simple Copy-Paste is a Strong Data Augmentation Method for Instance Segmentation, 2020
-]
-
---
-
-- Larger image sizes, larger and better models, better augmented data
+- Larger image sizes, larger and better models
+- New architectures: transformers with DETR/DINO losses, deformable convolutions...
+- Better augmented data, unsupervised pretraining
+- Dataset curation
 - https://paperswithcode.com/sota/object-detection-on-coco
-
----
-## Other works
-
-- New approaches try to avoid using anchors
-
---
-
-- CornerNet only predicts the two extreme edges of a box:
-
-.center[
-          <img src="images/cornernet.png" style="width: 400px;" />
-]
-
-.footnote.small[
-Law, Hei, and Deng, Jia. "CornerNet: Detecting Objects as Paired Keypoints" ECCV 2018
-]
----
-## Other works
-
-- New approaches try to avoid using anchors
-
-- DeTr uses a Transformer to map a set of features to a set of boxes (with different cardinality)
-
-.center[
-          <img src="images/detr.png" style="width: 650px;" />
-]
-
-.footnote.small[
-Carion, N., Massa, F., Synnaeve, G., Usunier, N., Kirillov, A., & Zagoruyko, S. "End-to-End Object Detection with Transformers" ECCV 2020
-]
-
---
-
-.small[The loss is a pair-wise matching between ground truth and prediction set. This optimal assignment is computed with the Hungarian algorithm]
-
-
-
