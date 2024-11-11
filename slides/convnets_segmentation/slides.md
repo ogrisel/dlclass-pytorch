@@ -72,13 +72,10 @@ Noh, Hyeonwoo, et al. "Learning deconvolution network for semantic segmentation.
 ]
 
 --
-- **sharper masks** by using precise spatial information (early layers)
+- **Sharper masks** by using precise spatial information (first and last layers).
 
 --
-- **better object 'understanding'** by using global information (middle layers)
-
-???
-Unpooling: switch variables tied to corresponding pooling layers. Remembers which pixel was the max
+- **Global context 'understanding'** by extracting semantics of coarser regions (middle layers).
 
 ---
 # Image Segmentation with U-Nets
@@ -93,6 +90,9 @@ Ronneberger, Olaf et al., "U-Net: Convolutional Networks for Biomedical Image Se
 
 --
 - **Skip connections** between corresponding convolution and deconvolution layers
+
+--
+- Copy and concatenate the last feature map of the same resolution to the output of the matching deconvolution layer.
 
 
 ---
