@@ -57,6 +57,10 @@ $p_{\theta}$ is parametrized by a neural network.
 The internal representation of the model can better capture the meaning
 of a sequence than a simple Bag-of-Words.
 
+--
+
+The probability of the sequence now depends on the order of the words.
+
 ---
 ## Conditional Language Models
 
