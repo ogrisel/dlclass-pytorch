@@ -9,28 +9,38 @@ Adapted from [Charles Ollion and Olivier Grisel](https://github.com/m2dsupsdlcla
 ---
 ## Natural Language Processing
 
-.center[
-<img src="images/nlp.png" style="width: 550px;" />
-]
+- Fixed size outputs (traditional methods are still competitive)
 
----
-## Natural Language Processing
+  - Sentence or document level classification (supervised)
 
-- Sentence/Document level Classification (topic, sentiment)
-
-- Topic modeling (LDA, ...)
+      - Topic, sentiment
 
 --
+  - Text clustering (unsupervised)
 
-- Translation
-
---
-
-- Chatbots / dialogue systems / assistants (Alexa, ...)
+      - Group similar documents
 
 --
+  - Topic modeling (unsupervised)
 
-- Summarization
+      - One document can belong to several topics
+
+--
+- Same length output (neural networks work well)
+  - Named entity extraction
+
+      - Recognise names of places, organizations, people, phone numbers...
+
+--
+- Variable length output: generative models (neural networks required)
+
+  - Machine translation
+
+--
+  - Document summarization
+
+--
+  - General purpose AI assistants (LLMs)
 
 ---
 # Recommended reading
@@ -383,8 +393,9 @@ Pennington, Jeffrey, Richard Socher, and Christopher D. Manning. "Glove: Global 
 
 --
 
-**Word Embeddings** no long state of the art for NLP tasks: BERT-style
-pretraining of deep transformers with sub-word tokenization is now used everywhere.
+**Word Embeddings** no long state of the art for NLP tasks: BERT-style or
+GPT-style pretraining of deep transformers with sub-word tokenization is now
+used everywhere.
 
 ---
 class: middle, center
