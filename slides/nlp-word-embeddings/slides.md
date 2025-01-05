@@ -332,7 +332,7 @@ useful word embedding parameters.
 
 ---
 # Word2Vec: Skip Gram
-a
+
 <br/>
 
 .center[
