@@ -378,6 +378,27 @@ In practice
 - no systematic difference between the two
 
 ---
+## Vanishing / Exploding Gradients
+
+Passing through $t$ time-steps, the resulting gradient is the **product** of many gradients and activations.
+
+--
+- Gradient messages close to $0$ can shrink be $0$
+- Gradient messages larger than $1$ can explode
+
+--
+- **Gradient clipping** prevents gradient explosion
+- Well chosen **activation function** is critical (tanh over sigmoid)
+
+--
+- **LSTM / GRU** mitigate vanishing/exploding gradients in RNNs
+- **Additive path** between $c\_t$ and $c\_{t-1}$
+
+--
+
+Similar to **skip connections** in ResNets.
+
+---
 # Minimal, more scalable variants
 
 .center[
@@ -388,33 +409,12 @@ In practice
 <img src="images/mingru.png" style="width: 400px;" />
 ]
 
-Less sequential, better GPU parallelism.
+Less sequential dependencies, better GPU parallelism.
 
 Can rival transformers and other modern architectures on long context modeling tasks.
 
 .footnote.small[
 Leo Feng, et al. "Were RNNs All We Needed?" 2024
 ]
-
----
-## Vanishing / Exploding Gradients
-
-Passing through $t$ time-steps, the resulting gradient is the **product** of many gradients and activations.
-
---
-- Gradient messages close to $0$ can shrink be $0$
-- Gradient messages larger than $1$ can explode
-
---
-- **LSTM / GRU** mitigate that in RNNs
-- **Additive path** between $c\_t$ and $c\_{t-1}$
-
---
-- **Gradient clipping** prevents gradient explosion
-- Well chosen **activation function** is critical (tanh)
-
---
-
-**Skip connections** in ResNet also alleviate a similar optimization problem.
 
 
