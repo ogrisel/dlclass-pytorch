@@ -330,27 +330,21 @@ Hochreiter, Sepp, and Jürgen Schmidhuber. "Long short-term memory." Neural comp
 .footnote.small[
 Hochreiter, Sepp, and Jürgen Schmidhuber. "Long short-term memory." Neural computation 1997
 ]
-
 $\mathbf{ u} = \sigma(\mathbf{W^u} \cdot h\_{t-1} + \mathbf{I^u} \cdot x\_t + b^u)$ .right[Update gate .red[`H`]]
 
 --
-
 $\mathbf{ f} = \sigma(\mathbf{W^f} \cdot h\_{t-1} + \mathbf{I^f} \cdot x\_t + b^f)$ .right[Forget gate .red[`H`]]
 
 --
-
 $\mathbf{ \tilde{c\_t}} = \tanh(\mathbf{W^c} \cdot h\_{t-1} + \mathbf{I^c} \cdot x\_t + b^c)$ .right[Cell candidate .red[`H`]]
 
 --
-
 $\mathbf{ c\_t} = \mathbf{f} \odot \mathbf{c\_{t-1}} + \mathbf{u} \odot \mathbf{ \tilde{c\_t}}$ .right[Cell output .red[`H`]]
 
 --
-
 $\mathbf{ o} = \sigma(\mathbf{W^o} \cdot h\_{t-1} + \mathbf{I^o} \cdot x\_t + b^o)$ .right[Output gate .red[`H`]]
 
 --
-
 $\mathbf{ h\_t} = \mathbf{o} \odot \tanh(\mathbf{c\_t})$ .right[Hidden output .red[`H`]]
 
 --
@@ -358,7 +352,6 @@ $\mathbf{ h\_t} = \mathbf{o} \odot \tanh(\mathbf{c\_t})$ .right[Hidden output .r
 $y = \text{softmax}( \mathbf{W} \cdot h\_t + b )$ .right[Output .red[`K`]]
 
 --
-<br/>
 
 $W^u, W^f, W^c, W^o$ .right[Recurrent weights .red[`H x H`]]
 
@@ -381,8 +374,27 @@ Chung, Junyoung, et al. "Gated Feedback Recurrent Neural Networks." ICML 2015
 
 In practice
 
-- more recent, people tend to use LSTM more
+- more recent, but LSTM are still more popular
 - no systematic difference between the two
+
+---
+# Minimal, more scalable variants
+
+.center[
+<img src="images/minlstm.png" style="width: 400px;" />
+]
+
+.center[
+<img src="images/mingru.png" style="width: 400px;" />
+]
+
+Less sequential, better GPU parallelism.
+
+Can rival transformers and other modern architectures on long context modeling tasks.
+
+.footnote.small[
+Leo Feng, et al. "Were RNNs All We Needed?" 2024
+]
 
 ---
 ## Vanishing / Exploding Gradients
