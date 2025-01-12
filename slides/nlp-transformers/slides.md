@@ -468,20 +468,24 @@ Human evaluation of LLM-based chat systems (most not open):
 ---
 # Takeaways
 
-- LMs can use either RNN or **Transformers** with *causal* attention in the decoder.
+- LMs initially developped with RNNs, more recently with **Transformers** with
+  *causal* attention in the decoder.
 
+--
 - Architecture variants:
-  - Encoder-only: BERT and co
-  - Decoder-only: GPT and most other recent LLMs
-  - Encoder-decoder: Attention is all you need
+  - Encoder-only: BERT (and co), useful to embed document as vectors.
+  - Decoder-only: GPT and most other recent LLMs, useful for text generation.
+  - Encoder-decoder: "Attention is all you need" paper, introduced for machine translation.
 
+--
 - Pretraining:
-  - Masked language modeling (BERT and derivatives)
-  - Autogressive language modeling via **Teacher Forcing** (GPT and derivatives)
+  - **Masked** language modeling (**BERT** and derivatives)
+  - **Autogressive** language modeling via **Teacher Forcing** (**GPT** and derivatives)
 
-Modern LLMs: pretrained with hundreds of billions of tokens and parameters with
-hundreds of high-end GPUs.
-
-Further fine-tuned for chat/coding assistance/math reasoning/tool usage on
-supervised data and via reinforcement learning.
+--
+- Today's LLMs:
+  - pretrained with hundreds of billions of tokens and parameters with hundreds
+    of high-end GPUs.
+  - fine-tuned for alignment: chat/coding assistance/math reasoning/tool usage
+    on supervised data and via reinforcement learning.
 
