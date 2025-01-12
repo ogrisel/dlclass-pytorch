@@ -1,6 +1,6 @@
 class: center, middle
 
-# Sequences, Attention and transformer
+# Sequences, Attention and Transformers
 
 Olivier Grisel
 
@@ -17,9 +17,13 @@ Adapted from [Charles Ollion and Olivier Grisel](https://github.com/m2dsupsdlcla
 
 --
 
-takes a sequence as input
+Takes a sequence as inputs.
 
-may output a single value, or a value for each time-step of the input
+May output a single value, or a value for each time-step of the input.
+
+Enough for auto-regressive language modelling via next word prediction.
+
+Nowadays, often called a decoder-only architecture in the context of language models.
 
 ---
 
@@ -33,7 +37,7 @@ may output a single value, or a value for each time-step of the input
 
 --
 
-### Self-attention and Transformer
+### Self-attention and Transformers
 
 ---
 class: center,middle
@@ -124,38 +128,36 @@ good approximation** for **language modeling** and machine translation.
 
 --
 
-Approximate softmax with **sampled softmax** (a.k.a. bucketing):
+Approximate softmax with **sampled softmax** (a.k.a. bucketing) but not great either.
 
-  - Accumulate train sequences in buckets $i \in B$ with $|V_i| ~= 50k$;
-  - Sample bucket $i$ at random and train with regular softmax on $V_i$;
-  - Share softmax parameters for words in common across buckets;
-  - Iterate untill the end of the training set.
+--
 
-???
-Sampled softmax (https://arxiv.org/abs/1412.2007):
-  - Biased estimate, but works reasonably well in practice;
-  - Also useful to train item embedding in RecSys.
+Ideally we would like a smaller vocabulary space (50k instead of 1M+) and
+stick to exact softmax normalization.
 
 ---
-## Alternative to Word Embeddings
+## Alternatives to word-level tokenization
 
-Character-level Embedding (possibly with a CNN layer)
+### Character-level or byte-level tokenization
 
-- (+) Much smaller vocabulary size (faster softmax)
-- (+) No need for language specific segmentation (e.g. Chinese);
-- (+) Robust to spelling mistakes and out-of-vocabulary words;
-- (+) Can deal with mixed language contents.
+- 👍 Much smaller vocabulary size (faster softmax)
+- 👍 No need for language specific segmentation (e.g. Chinese);
+- 👍 Robust to spelling mistakes and out-of-vocabulary words;
+- 👍 Handle with mixed language data.
+
+--
+- 👎 Model needs to learn word structure from data;
+- 👎 Decoding more complex and expensive.
 
 --
 
-however
+### Subword tokenization
 
-- (-) Need to learn word structure from data;
-- (-) Decoding more complex and expensive.
-
---
-
-Sub-word representations and **Byte Pair Encoding** (BPE) are better
+- Agreggate prefequently occuring characters together.
+- **Byte Pair Encoding** (BPE) and similar.
+- Implementation: https://huggingface.co/docs/tokenizers/
+- Typical vocabulary size: 30,000 to 50,000.
+- Most popular approach for today's Large Language Models (LLMs).
 
 ???
 
@@ -316,7 +318,7 @@ Xu, Kelvin, et al. "Show, Attend and Tell: Neural Image Caption Generation with 
 ---
 class: center, middle
 
-# Self-attention and transformer
+# Self-attention and transformers
 ---
 
 # Self-Attention
@@ -372,9 +374,9 @@ Attention Is All You Need Ashish Vaswani et al. NIPS 2017
 ]
 ---
 
-# Transformer tricks
+# Token positional encoding
 
-No notion of word order. Positional encoding need to be added:
+No notion of token order. Positional encoding need to be added:
 
 .center[
   <img src="images/input_simple_transformer.png" style="width: 300px;" />
@@ -386,25 +388,29 @@ No notion of word order. Positional encoding need to be added:
   <img src="images/positional_encoding.png" style="width: 400px;" />
 ]
 
-May also learn the embedding
+Alternative: learn the positional embedding parameters from random init.
+
 ---
-# Transformer based language models
+# Pretraining transformers on text data
 
-*Pretrained transformers* for transfer learning, like "ImageNet-pretrained convnets" for NLP
+*Pretrained transformers* for transfer learning in NLP in 2018-2010, similar to
+"ImageNet-pretrained convnets" in 2012-2014.
 
-.center[
-          <img src="images/sota_bert.png" style="width: 700px;" />
-]
+BERT:
+
+- Masked auto-encoding pretraining
+- Still used as encoder for text feature extraction models
+- Not used for actual text generation.
+
+GPT: Generative Pretrained Transformers
+
+- Teacher forcing on next-token prediction tasks on a web-scale dataset.
+- Decoder-only architecture
+
 .footnote.small[
-GLUE : a multi-task benchmark and analysis platform for natural language processing, Alex Wang et al. ICLR 2019 <br/>
 BERT : Pre-training of Deep Bidirectional Transformers for Language Understanding, Jacob Devlin et al. 2018 <br/>
 GPT2 : https://openai.com/blog/better-language-models/
 ]
-
---
-
-
-Most recent models https://github.com/huggingface/transformers
 
 ---
 
@@ -419,7 +425,7 @@ Slide from Thomas Wolf (HuggingFace)
 ]
 ---
 
-# BERT
+# BERT vs GPT
 
 .center[
           <img src="images/pretrain_bert2.png" style="width: 700px;" />
@@ -442,23 +448,40 @@ Slide from Thomas Wolf (HuggingFace)
           <img src="images/inputs_bert.png" style="width: 600px;" />
 ]
 
+
+---
+# SOTA LLMs
+
+Open-source LLMs implementation and open weights:
+
+- https://github.com/huggingface/transformers (open source library)
+- https://huggingface.co/models (pretrained weights, various licenses)
+
+Open LLMs evaluated on various benchmarks (GPQA, MMLU-Pro...):
+
+- https://huggingface.co/spaces/open-llm-leaderboard/open_llm_leaderboard
+
+Human evaluation of LLM-based chat systems (most not open):
+
+- https://lmarena.ai
+
 ---
 # Takeaways
 
-- Seq2Seq: variable number of input and ouput tokens
+- LMs can use either RNN or **Transformers** with *causal* attention in the decoder.
 
 - Architecture variants:
+  - Encoder-only: BERT and co
+  - Decoder-only: GPT and most other recent LLMs
   - Encoder-decoder: Attention is all you need
-  - Decoder-only: GPT and most recent LLMs
-  - "Encoder-only": BERT and co
-
-- Decoder always trained by **Teacher Forcing**
-
-- Can use either RNN or **Transformers** with *causal* attention in the decoder
 
 - Pretraining:
-  - Autogressive language modeling (GPT and derivatives)
   - Masked language modeling (BERT and derivatives)
+  - Autogressive language modeling via **Teacher Forcing** (GPT and derivatives)
 
+Modern LLMs: pretrained with hundreds of billions of tokens and parameters with
+hundreds of high-end GPUs.
 
+Further fine-tuned for chat/coding assistance/math reasoning/tool usage on
+supervised data and via reinforcement learning.
 
