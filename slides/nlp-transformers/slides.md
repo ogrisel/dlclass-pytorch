@@ -153,8 +153,8 @@ stick to exact softmax normalization.
 
 ### Subword tokenization
 
-- Agreggate prefequently occuring characters together.
-- **Byte Pair Encoding** (BPE) and similar.
+- Agreggate frequently occuring characters into a single token.
+- **Byte Pair Encoding** (BPE) and variants.
 - Implementation: https://huggingface.co/docs/tokenizers/
 - Typical vocabulary size: 30,000 to 50,000.
 - Most popular approach for today's Large Language Models (LLMs).
