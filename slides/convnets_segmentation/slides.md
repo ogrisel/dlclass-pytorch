@@ -88,10 +88,7 @@ Output a class map for each pixel (here: dog vs background)
 
 --
 
-- **Instance segmentation**: specify each object instance as well (two dogs have different instances)
-
---
-  - This can be done through **object detection** + **segmentation**
+- **Instance segmentation** (telling apart the individual objects of the same class) is covered in the next lecture
 
 
 ---
@@ -130,7 +127,7 @@ output map upscaled from fully convolutional network
 ]
 
 .footnote.small[
-Long, Jonathan, et al. "Fully convolutional networks for semantic segmentation." CVPR 2015
+Long et al. (CVPR 2015), see the previous slide
 ]
 
 --
@@ -195,11 +192,4 @@ https://huggingface.co/tasks/image-segmentation
 
 --
 
-<br/>
-
-### Pytorch
-
-Detectron2 https://github.com/facebookresearch/detectron2
-
-- Mask-RCNN, Retina Net and other architectures
-- Focal loss, Feature Pyramid Networks, etc.
+Next lecture: object detection and instance segmentation

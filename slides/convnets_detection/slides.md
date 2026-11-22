@@ -12,12 +12,19 @@ Adapted from [Charles Ollion and Olivier Grisel](https://github.com/m2dsupsdlcla
 
 
 ---
-# Outline
+# Recap: Semantic Segmentation
 
-
-### Feature Maps and Fully convolutional Networks
+- Fully convolutional networks: one class score per pixel, for any image size
+- Transposed convolutions and skip connections (U-Net): recover fine spatial resolution
 
 --
+
+### What is still missing
+- Object instances are not separated: two dogs form one blob
+- No box or position is given for each object
+
+---
+# Outline
 
 ### Simple Localization as regression
 
@@ -27,9 +34,11 @@ Adapted from [Charles Ollion and Olivier Grisel](https://github.com/m2dsupsdlcla
 
 --
 
-*next time*:
+### Instance Segmentation
 
-### Semantic & Instance Segmentation
+--
+
+### Measuring performance
 
 ---
 class: middle, center
@@ -235,7 +244,20 @@ Ren, Shaoqing, et al. "Faster r-cnn: Towards real-time object detection with reg
 
 
 ???
-Region proposal input is a fully convolutional network: shares weights across spatial dimensions
+Region proposal input is a fully convolutional network (see the previous lecture): shares weights across spatial dimensions
+
+---
+# Instance Segmentation
+
+Output a mask for each object instance, so that two objects of the same class are told apart
+
+--
+
+- **Semantic segmentation**: one label per pixel, no distinction between instances
+- **Instance segmentation**: each object instance gets its own mask (two dogs are two different instances)
+
+--
+- This can be done through **object detection** + **segmentation**: detect each object's box, then predict a mask inside it
 
 ---
 # Instance Segmentation with Mask R-CNN
@@ -310,6 +332,17 @@ Zeming Li et al. Light-Head R-CNN: In Defense of Two-Stage Object Detector 2017
 - Better augmented data, unsupervised pretraining
 - Dataset curation
 - https://huggingface.co/models?pipeline_tag=object-detection&sort=trending
+
+--
+
+<br/>
+
+### Pytorch
+
+Detectron2 https://github.com/facebookresearch/detectron2
+
+- Mask-RCNN, Retina Net and other architectures
+- Focal loss, Feature Pyramid Networks, etc.
 
 ---
 ## Take away NN for Vision
