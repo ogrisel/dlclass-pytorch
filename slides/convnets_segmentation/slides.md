@@ -4,7 +4,7 @@ class: center, middle
 
 Olivier Grisel
 
-`olivier.grisel@inria.fr`
+`olivier@probabl.ai`
 
 Adapted from [Charles Ollion and Olivier Grisel](https://github.com/m2dsupsdlclass/lectures-labs)
 
@@ -72,9 +72,72 @@ Next lecture: one mask and one class for each object, *which pixels* belong to e
 
 
 ---
+# Panoptic Segmentation
+
+Every pixel gets one class, and every countable object gets its own instance:
+
+- **Stuff** (amorphous regions such as sky, road or grass): one region per class, as in semantic segmentation
+- **Things** (countable objects such as cats, cars or cells): one mask per object, as in instance segmentation
+
+--
+
+Each pixel gets exactly one (class, instance) pair: no overlap and no gap.
+
+.footnote.small[
+Kirillov et al., "Panoptic Segmentation", CVPR 2019
+]
+
+---
+# Which Task for Which Application?
+
+**Semantic segmentation**: areas and proportions matter, not the individual objects
+
+- Land cover statistics from satellite images: share of forest, water, urban areas
+- Road and free space detection for autonomous driving
+
+--
+
+**Instance segmentation**: each object matters, with one mask per object
+
+- Counting blood cells and their size distribution in medical images
+- Counting or measuring individual fruits or parts on a production line
+
+--
+
+**Questions to ask**
+
+- Do I need a count or a size per object? Then instance segmentation
+- Can objects touch or overlap? Semantic segmentation merges them into one region
+- Only areas or proportions? Semantic segmentation is cheaper to annotate and to train
+
+---
 class: middle, center
 
 # Feature Maps and Fully Convolutional Networks
+
+---
+# Feature Maps
+
+A **feature map** is the output of one filter: a 2D grid of activations. A layer with $C$ filters outputs $C$ feature maps, a tensor of shape $C \times H \times W$.
+
+--
+
+Output size of a convolution or pooling layer, per spatial dimension:
+
+$$H\_{out} = \left\lfloor \frac{H\_{in} + 2P - K}{S} \right\rfloor + 1$$
+
+with $K$ the kernel size, $P$ the padding, $S$ the stride.
+
+--
+
+- **Kernel and padding**: stride $1$ and $P = (K-1)/2$ keep the size (`3×3`, padding `1`)
+- **Stride**: divides the size by $S$ (`3×3`, stride `2`, padding `1`: `56` becomes `28`)
+- **Max pooling `2×2`, stride `2`**: halves the size, same channels
+- **Number of filters**: sets $C$, not the size
+
+--
+
+`224×224×3` → 7×7 conv, stride 2 → `112×112×64` → 3×3 max pool, stride 2 → `56×56×64`
 
 ---
 # Convolutionization of a Classification Network
@@ -101,6 +164,8 @@ output map upscaled from fully convolutional network
 
 ---
 # Fully Convolutional Network
+
+**A first, naive approach** to turn a classification architecture into a semantic segmentation model: keep the convolutional layers and replace the fully connected head with $1 \times 1$ convolutions.
 
 .center[
           <img src="images/densefc.png" style="width: 500px;" />
@@ -333,13 +398,12 @@ $$\mathrm{mIoU} = \frac{1}{C} \sum\_{c=1}^{C} \mathrm{IoU}\_c$$
 - Not differentiable: used for evaluation, not as a training loss
 
 ---
-## State-of-the-art & links
+## Takeaways
 
-Recent models and checkpoints for segmentation can be browsed here:
-
-.center[
-https://huggingface.co/tasks/image-segmentation
-]
+- **Semantic segmentation** predicts one class per pixel, with fully convolutional networks
+- **Downscaling** (stride 2, max pooling) makes the masks coarse: recover the resolution with transposed convolutions and skip connections (U-Net)
+- **Training**: per-pixel multiclass cross-entropy summed over the pixels, computed from the logits
+- **Evaluation**: per-class IoU and mean IoU, higher is better
 
 --
 

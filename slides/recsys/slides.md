@@ -4,7 +4,7 @@ class: center, middle
 
 Olivier Grisel
 
-`olivier.grisel@inria.fr`
+`olivier@probabl.ai`
 
 Adapted from [Charles Ollion and Olivier Grisel](https://github.com/m2dsupsdlclass/lectures-labs)
 
