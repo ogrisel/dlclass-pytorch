@@ -2,7 +2,9 @@
 
 ## Slides
 - [Convolutional Neural Networks for Semantic Segmentation](https://ogrisel.github.io/dlclass-pytorch/slides/convnets_segmentation)
+  - Notebooks: [fully_convolutional_neural_networks.ipynb](notebooks/fully_convolutional_neural_networks.ipynb), [semantic-segmentation-satellite-imagery-with-unet.ipynb](notebooks/semantic-segmentation-satellite-imagery-with-unet.ipynb)
 - [Convolutional Neural Networks for Object Detection and Instance Segmentation](https://ogrisel.github.io/dlclass-pytorch/slides/convnets_detection)
+  - Notebooks: [convnets_classification_localization.ipynb](notebooks/convnets_classification_localization.ipynb)
 - [Recommender Systems](https://ogrisel.github.io/dlclass-pytorch/slides/recsys)
 - [NLP - Word Embeddings](https://ogrisel.github.io/dlclass-pytorch/slides/nlp-word-embeddings)
 - [NLP - Language Modeling with Recurrent Neural Networks](https://ogrisel.github.io/dlclass-pytorch/slides/nlp-recurrent-networks)
