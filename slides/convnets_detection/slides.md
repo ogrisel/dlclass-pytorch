@@ -20,26 +20,17 @@ Adapted from [Charles Ollion and Olivier Grisel](https://github.com/m2dsupsdlcla
 --
 
 ### What is still missing
-- Object instances are not separated: two dogs form one blob
+- Object instances are not separated: two cats form one blob
 - No box or position is given for each object
 
 ---
-# Localization and Object Detection
-
-
-.center[
-          <br/>
-          <img src="images/cls_4_2.png" style="width: 800px;" />
-]
-
----
-# Object Detection vs Instance Segmentation
-
+# Object Detection
 
 .center[
-          <br/>
-          <img src="images/cls_4_3.png" style="width: 800px;" />
+          <img src="images/twocats_detection.jpg" style="width: 560px;" />
 ]
+
+One box and one class for each object: *where* is each object?
 
 ---
 # Outline
@@ -267,18 +258,22 @@ Region proposal input is a fully convolutional network (see the previous lecture
 ---
 # Instance Segmentation
 
-Output a mask for each object instance, so that two objects of the same class are told apart
+.center[
+          <img src="images/twocats_instance.jpg" style="width: 400px;" />
+]
+
+One mask and one class for each object: *which pixels* belong to each object?
 
 --
 
-- **Semantic segmentation**: one label per pixel, no distinction between instances
-- **Instance segmentation**: each object instance gets its own mask (two dogs are two different instances)
+- **Semantic segmentation**: no distinction between instances
+- **Instance segmentation**: one mask per object (two cats are two instances)
 
 --
-- This can be done through **object detection** + **segmentation**: detect each object's box, then predict a mask inside it
+- Can be done with **object detection** + **segmentation**: predict a mask in each detected box
 
 ---
-# Instance Segmentation with Mask R-CNN
+# Mask R-CNN
 
 .center[
           <img src="images/maskrcnn.png" style="width: 760px;" />
@@ -292,7 +287,7 @@ He, Kaiming, et al. "Mask R-CNN." International Conference on Computer Vision (I
 
 Faster-RCNN architecture with a third, binary mask head
 ---
-# Instance Segmentation with Mask R-CNN
+# Mask R-CNN
 
 .center[
           <img src="images/maskrcnnresults.png" style="width: 760px;" />
@@ -308,7 +303,7 @@ He, Kaiming, et al. "Mask R-CNN." International Conference on Computer Vision (I
 - Excellent instance generalization
 
 ---
-# Instance Segmentation with Mask R-CNN
+# Mask R-CNN
 
 
 .center[

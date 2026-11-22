@@ -27,47 +27,48 @@ Adapted from [Charles Ollion and Olivier Grisel](https://github.com/m2dsupsdlcla
 
 ### Limitations
 - Mostly on centered images
-- Only a single object per image
+- A single label for the whole image: no idea of where the objects are
 - Not enough for many real world vision tasks
 
 ---
-# Beyond Image Classification
-
+# Image Classification
 
 .center[
-          <br/>
-          <img src="images/cls_1.png" style="width: 800px;" />
+          <img src="images/twocats_classification.jpg" style="width: 560px;" />
 ]
+
+One label for the whole image: *what* is in the image?
 
 ---
-# From Classification to Semantic Segmentation
-
+# Semantic Segmentation
 
 .center[
-          <br/>
-          <img src="images/cls_semseg.png" style="width: 800px;" />
+          <img src="images/twocats_semantic.jpg" style="width: 560px;" />
 ]
+
+One class for each pixel: *which pixels* belong to each class?
+
+--
+
+- No notion of object: the two cats are merged in a single region
 
 ---
-# Segmentation
-
-Output a class map for each pixel (here: dog vs background)
+# Object Detection
 
 .center[
-          <img src="images/dog_segment.jpg" style="width: 400px;" />
+          <img src="images/twocats_detection.jpg" style="width: 560px;" />
 ]
 
---
+Next lecture: one box and one class for each object, *where* is each object?
 
-- **Semantic segmentation**: full image, pixel-wise classification
+---
+# Instance Segmentation
 
---
+.center[
+          <img src="images/twocats_instance.jpg" style="width: 560px;" />
+]
 
-  - No object detection
-
---
-
-- **Instance segmentation** (telling apart the individual objects of the same class) is covered in the next lecture
+Next lecture: one mask and one class for each object, *which pixels* belong to each object?
 
 
 ---
