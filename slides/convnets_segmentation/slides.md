@@ -80,7 +80,7 @@ class: middle, center
 # Convolutionization of a Classification Network
 
 .center[
-  <img src="images/convolutionalization.png" style="width: 400px;" />
+  <img src="images/convolutionalization.png" style="width: 340px;" />
 ]
 
 .footnote.small[
@@ -118,10 +118,100 @@ Long et al. (CVPR 2015), see the previous slide
 - Aggregate maps from several convolutions at different scales for more robust results
 
 ---
-# Segmentation with Transposed Convolutions
+# Limitation: Coarse Resolution
+
+- **Max pooling** and **strided convolutions** downscale the feature maps: the output is typically $32\times$ smaller than the input
+
+--
+
+- A $224 \times 224$ input gives a $7 \times 7$ output map: each output cell covers a $32 \times 32$ block of pixels
+
+--
+
+- A high resolution segmentation mask is **impossible** to predict directly from such a coarse map
+
+--
+
+- Upsampling it gives blurry masks: small objects and thin structures are lost
+
+--
+
+- We need to **upsample** the feature maps back to the input resolution
+
+---
+# Downscaling in a ResNet
 
 .center[
-          <img src="images/deconv.png" style="width: 650px;" />
+          <img src="images/resnet_downsampling.png" style="width: 680px;" />
+]
+
+.footnote.small[
+ResNet-50 (He et al., CVPR 2016) on a $224 \times 224$ image. Height: spatial resolution, width: number of channels.
+]
+
+--
+
+- Each operation with **stride 2** divides the resolution by 2
+
+--
+
+- 5 such operations: $2^5 = 32\times$ smaller feature maps than the input image
+
+---
+# Inspecting a Pretrained ResNet
+
+Load a pretrained ResNet-18 from the Hugging Face Hub with `timm` and print its layers with `torchinfo`:
+
+```py
+import timm
+from torchinfo import summary
+
+model = timm.create_model("hf-hub:timm/resnet18.a1_in1k", pretrained=True)
+summary(model, input_size=(1, 3, 224, 224))
+```
+
+.footnote.small[
+Requires `pip install timm torchinfo`
+]
+
+---
+# Where the Downscaling Happens
+
+```text
+Layer (type:depth-idx)                   Output Shape              Param #
+ResNet                                   [1, 1000]                 --
+├─Conv2d: 1-1                            [1, 64, 112, 112]         9,408
+├─BatchNorm2d: 1-2                       [1, 64, 112, 112]         128
+├─ReLU: 1-3                              [1, 64, 112, 112]         --
+├─MaxPool2d: 1-4                         [1, 64, 56, 56]           --
+├─Sequential: 1-5                        [1, 64, 56, 56]           --
+...
+├─Sequential: 1-6                        [1, 128, 28, 28]          --
+│    └─BasicBlock: 2-3                   [1, 128, 28, 28]          --
+│    │    └─Conv2d: 3-17                 [1, 128, 28, 28]          73,728
+...
+├─Sequential: 1-7                        [1, 256, 14, 14]          --
+│    └─BasicBlock: 2-5                   [1, 256, 14, 14]          --
+│    │    └─Conv2d: 3-34                 [1, 256, 14, 14]          294,912
+...
+├─Sequential: 1-8                        [1, 512, 7, 7]            --
+│    └─BasicBlock: 2-7                   [1, 512, 7, 7]            --
+│    │    └─Conv2d: 3-51                 [1, 512, 7, 7]            1,179,648
+...
+├─SelectAdaptivePool2d: 1-9              [1, 512]                  --
+│    └─AdaptiveAvgPool2d: 2-9            [1, 512, 1, 1]            --
+├─Linear: 1-10                           [1, 1000]                 513,000
+```
+
+.footnote.small[
+Stride 2: Conv2d 1-1, MaxPool2d 1-4, and the first Conv2d of stages 2, 3 and 4 (3-17, 3-34, 3-51). ResNet-18 has the same strides as ResNet-50, with fewer channels.
+]
+
+---
+# Transposed Convolutions
+
+.center[
+          <img src="images/deconv.png" style="width: 560px;" />
 ]
 
 .footnote.small[
@@ -130,11 +220,10 @@ Noh, Hyeonwoo, et al. "Learning deconvolution network for semantic segmentation.
 
 --
 
-- **Transposed convolutions** (sometimes called "deconvolutions", e.g. in the paper above) learn to **upsample** feature maps
-- Despite the name, they do not invert a convolution: they only restore the spatial resolution
+- **Transposed convolutions** ("deconvolutions" in the paper above) learn to **upsample** feature maps, without inverting a convolution
 
 .center[
-          <img src="images/conv_deconv.png" style="width: 350px;" />
+          <img src="images/conv_deconv.png" style="width: 280px;" />
 ]
 
 --
@@ -155,7 +244,7 @@ Ronneberger, Olaf et al., "U-Net: Convolutional Networks for Biomedical Image Se
 ]
 
 --
-- **Skip connections** between corresponding convolution and transposed convolution layers
+- **Skip connections** between matching encoder and decoder layers
 
 --
 - Copy and concatenate the last feature map of the same resolution to the output of the matching transposed convolution layer.
