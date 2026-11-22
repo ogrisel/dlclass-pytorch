@@ -14,7 +14,7 @@ Adapted from [Charles Ollion and Olivier Grisel](https://github.com/m2dsupsdlcla
 ---
 # Recap: Semantic Segmentation
 
-- Fully convolutional networks: one class score per pixel, for any image size
+- Fully convolutional networks: one class probability per pixel, for any image size
 - Transposed convolutions and skip connections (U-Net): recover fine spatial resolution
 - Strided operations downscale the feature maps (typically $32\times$): small objects get few cells
 
@@ -140,7 +140,7 @@ $C$ classes, $4$ output dimensions ($1$ box)
 
 --
 
-**Predict exactly $N$ objects:** predict $(N \times 4)$ coordinates and $(N \times K)$ class scores
+**Predict exactly $N$ objects:** predict $(N \times 4)$ coordinates and $(N \times K)$ class probabilities
 
 ---
 # Training Objective
@@ -195,7 +195,7 @@ Redmon, Joseph, et al. "You only look once: Unified, real-time object detection.
 --
 
 For each cell of the $S \times S$ predict:
-- $B$ **boxes** and **confidence scores** $\text{conf}$ ($5 \times B$ values) + **class probabilities** $p(c)$ for each of the $C$ classes
+- $B$ **boxes** and **box confidences** $\text{conf}$ ($5 \times B$ values) + **class probabilities** $p(c)$ for each of the $C$ classes
 
 ---
 # YOLO
@@ -204,7 +204,7 @@ For each cell of the $S \times S$ predict:
 ]
 
 For each cell of the $S \times S$ predict:
-- $B$ **boxes** and **confidence scores** $\text{conf}$ ($5 \times B$ values) + **class probabilities** $p(c)$ for each of the $C$ classes
+- $B$ **boxes** and **box confidences** $\text{conf}$ ($5 \times B$ values) + **class probabilities** $p(c)$ for each of the $C$ classes
 
 --
 
@@ -246,7 +246,7 @@ Illustration: the redundant boxes are simulated by jittering the ground truth bo
 
 Detectors output several overlapping boxes for the same object. For each class:
 
-1. Keep the box with the highest score
+1. Keep the box with the highest predicted confidence
 2. Suppress the boxes whose $\mathrm{IoU}$ with it is above a threshold (for instance $0.5$)
 3. Repeat with the remaining boxes
 
@@ -268,7 +268,7 @@ Anchors at one location of a feature map with stride $32$: $3$ scales and $3$ as
 --
 
 - At each location of the feature map: $k$ **anchor boxes** with predefined sizes and aspect ratios ($k = 9$ here)
-- The network predicts for each anchor a score and offsets that refine the box
+- The network predicts for each anchor an objectness score (object or background) and offsets that refine the box
 
 --
 
@@ -278,11 +278,11 @@ Anchors at one location of a feature map with stride $32$: $3$ scales and $3$ as
 # RetinaNet
 
 .center[
-          <img src="images/retinanet.png" style="width: 700px;" />
+          <img src="images/retinanet.png" style="width: 540px;" />
 ]
 
 .footnote.small[
-Lin, Tsung-Yi, et al. "Focal loss for dense object detection." ICCV 2017.
+Lin, Tsung-Yi, et al. "Focal loss for dense object detection." ICCV 2017. More information: [RetinaNet](https://arxiv.org/abs/1708.02002) and [Feature Pyramid Network](https://arxiv.org/abs/1612.03144) papers.
 ]
 
 --
@@ -293,7 +293,10 @@ Single stage detector with:
 
 --
 
-See the [RetinaNet](https://arxiv.org/abs/1708.02002) and [Feature Pyramid Network](https://arxiv.org/abs/1612.03144) papers for more information
+**Better than SSD and YOLO for objects of different sizes:**
+- YOLO (v1): one coarse grid, so small objects get few cells
+- SSD: several scales, but its early maps have weak semantic features
+- FPN: every scale gets strong semantic features
 
 ---
 # Box proposals
@@ -351,6 +354,10 @@ Carion, Nicolas, et al. "End-to-end object detection with transformers." ECCV 20
 - A fixed set of $N$ learned **object queries**: each one predicts a box and a class, or "no object"
 - No anchors and no NMS: the training loss discourages duplicate predictions
 
+--
+
+The **transformer** blocks and the encoder/decoder architecture are explained in future lectures
+
 ---
 # Training Objective for Detection
 
@@ -366,8 +373,6 @@ $$\mathcal{L} = \sum\_{i} \mathcal{L}\_{cls}(\hat{p}\_i, c\_i) + \lambda \sum\_{
 --
 
 - $\mathcal{L}\_{cls}$: cross-entropy (focal loss in RetinaNet), $\mathcal{L}\_{box}$: smooth L1
-- Mask R-CNN adds a per-pixel binary cross-entropy on the masks
-- DETR: one-to-one Hungarian matching instead of IoU thresholds
 - **Lower is better**
 
 ---
@@ -473,6 +478,10 @@ $$\mathrm{mAP} = \frac{1}{C} \sum\_{c=1}^{C} \mathrm{AP}\_c$$
 
 --
 
+- Compute the AP of each class $c$ separately, then average these $C$ values over all the classes
+
+--
+
 - **Higher is better**, from $0$ to $1$
 - COCO benchmark: AP averaged over $10$ IoU thresholds, from $0.5$ to $0.95$ (mAP@[0.5:0.95])
 - Also reported for small, medium and large objects: $\mathrm{AP}\_s$, $\mathrm{AP}\_m$, $\mathrm{AP}\_l$
@@ -538,33 +547,9 @@ Detectron2 https://github.com/facebookresearch/detectron2
 
 - **Detection**: one box and one class per object, from region proposals or from a dense grid of anchors
 - **Single-stage** (YOLO, RetinaNet) vs **two-stage** (Faster R-CNN): a trade-off between speed and accuracy
-- **IoU** matches predictions to the ground truth, in training and in evaluation. **NMS** removes duplicate boxes
+- **IoU** is used in training and in evaluation, with a different role:
+  - **Training**: computed between each anchor box (or region proposal) and the ground truth box, then compared to a threshold to select the loss terms: the box regression term is only included for the anchors above it
+  - **Evaluation**: computed between the predicted box (or mask) and the ground truth box (or mask): a detection above the threshold is a true positive
+- **NMS** removes redundant predicted boxes
 - **Instance segmentation**: detection plus a mask head (Mask R-CNN), **panoptic segmentation** adds the regions of the rest
 - **Evaluation**: AP per class averaged into mAP over IoU thresholds, higher is better
-
----
-# Transfer Learning for Vision
-
-### Pre-trained features as a basis
-
-- ImageNet: centered objects, very broad image domain
-- 1M+ labels and many different classes resulting in very **general** and **disentangling** representations
-- Better Networks (i.e. ResNet vs VGG) have **a huge impact**
-- Recent alternatives: self-supervised learning (more on this later)
-
---
-
-### Transfer learning and fine tuning
-
-Goal: make use of a smaller dataset but with richer labels:
-
-- object bounding boxes, object classes, instance masks...
-
---
-
-Steps:
-
-- Remove the last layer(s) of a model pretrained on ImageNet (for instance)
-- Add new layers that match the output shape of the new labels
-- **Transfer learning**: fit only the last layers to the new dataset
-- or **Fine tune** the whole architecture end-to-end

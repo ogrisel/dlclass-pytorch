@@ -30,7 +30,7 @@ FALSE_POSITIVE_COLOR = "#e74c3c"
 CURVE_COLOR = "#34495e"
 AREA_COLOR = "#1e90ff"
 TITLE_FONT = 21
-TEXT_FONT = 24
+TEXT_FONT = 22
 TICK_FONT = 21
 
 # (confidence, is a true positive) of the detections of the class "cat", over a
@@ -87,7 +87,7 @@ def plot_ap(detections, n_ground_truth, output_path):
     ranked = sorted(detections, reverse=True)
 
     fig = plt.figure(figsize=(12, 5.0))
-    ax_table = fig.add_axes([0.01, 0.03, 0.56, 0.84])
+    ax_table = fig.add_axes([0.01, 0.03, 0.66, 0.84])
     ax_table.axis("off")
     ax_table.set_title(
         f"Ranked \"cat\" detections ({n_ground_truth} cats in the ground truth)",
@@ -95,8 +95,8 @@ def plot_ap(detections, n_ground_truth, output_path):
         loc="left",
         pad=12,
     )
-    columns = [0.0, 0.16, 0.34, 0.53, 0.81]
-    headers = ["Rank", "Score", "Match", "Precision", "Recall"]
+    columns = [0.0, 0.155, 0.447, 0.629, 0.876]
+    headers = ["Rank", "Confidence", "Match", "Precision", "Recall"]
     n_rows = len(ranked) + 1
     for x, header in zip(columns, headers):
         ax_table.text(x, 1 - 0.5 / n_rows, header, fontsize=TEXT_FONT, fontweight="bold", va="center")
@@ -110,7 +110,7 @@ def plot_ap(detections, n_ground_truth, output_path):
         ax_table.text(columns[3], y, f"{p:.2f}", fontsize=TEXT_FONT, va="center")
         ax_table.text(columns[4], y, f"{r:.2f}", fontsize=TEXT_FONT, va="center")
 
-    ax = fig.add_axes([0.69, 0.2, 0.29, 0.67])
+    ax = fig.add_axes([0.75, 0.2, 0.22, 0.67])
     steps_recall = np.concatenate([[0.0], recall])
     steps_envelope = np.concatenate([[envelope[0]], envelope])
     ax.fill_between(steps_recall, steps_envelope, step="pre", color=AREA_COLOR, alpha=0.35)

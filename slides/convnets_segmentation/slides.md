@@ -318,7 +318,7 @@ Ronneberger, Olaf et al., "U-Net: Convolutional Networks for Biomedical Image Se
 ---
 # Training Objective
 
-For each pixel $(i, j)$, the network outputs one score (logit) $z\_{ij,c}$ per class. A **softmax** turns them into probabilities:
+For each pixel $(i, j)$, the network outputs one logit $z\_{ij,c}$ per class. A **softmax** turns them into probabilities:
 
 $$\hat{y}\_{ij,c} = \frac{e^{z\_{ij,c}}}{\sum\_{c'=1}^{C} e^{z\_{ij,c'}}}$$
 
