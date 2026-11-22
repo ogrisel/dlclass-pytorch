@@ -1,3 +1,5 @@
+.DS_Store
+__pycache__
 notebooks/.ipynb_checkpoints/
 notebooks/VOCdevkit/
 notebooks/VOCtrainval_06-Nov-2007.tar

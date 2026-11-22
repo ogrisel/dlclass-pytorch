@@ -251,6 +251,88 @@ Ronneberger, Olaf et al., "U-Net: Convolutional Networks for Biomedical Image Se
 
 
 ---
+# Training Objective
+
+For each pixel $(i, j)$, the network outputs one score (logit) $z\_{ij,c}$ per class. A **softmax** turns them into probabilities:
+
+$$\hat{y}\_{ij,c} = \frac{e^{z\_{ij,c}}}{\sum\_{c'=1}^{C} e^{z\_{ij,c'}}}$$
+
+--
+
+The loss is the **sum over all the pixels** of the **multiclass cross-entropy**:
+
+$$\mathcal{L} = - \sum\_{i=1}^{H} \sum\_{j=1}^{W} \sum\_{c=1}^{C} y\_{ij,c} \log \hat{y}\_{ij,c}$$
+
+where $y\_{ij,c} = 1$ if the pixel $(i, j)$ belongs to class $c$, and $0$ otherwise.
+
+--
+
+**Lower is better**: $\mathcal{L} \geq 0$, and $\mathcal{L} = 0$ if every pixel gets probability $1$ for its true class.
+
+---
+# Training Objective in PyTorch
+
+```py
+import torch.nn.functional as F
+
+# logits: (N, C, H, W), target: (N, H, W) with class indices in [0, C - 1]
+loss = F.cross_entropy(logits, target)
+```
+
+--
+
+- The softmax is included: pass the raw **logits**, not the probabilities
+
+--
+
+- By default the loss is **averaged** over the pixels and the images instead of summed (`reduction="sum"`): same minimizer, only the scale of the gradients changes
+
+---
+# Intersection over Union (IoU)
+
+.center[
+          <img src="images/twocats_iou.jpg" style="width: 690px;" />
+]
+
+.footnote.small[
+Illustration: the prediction is the ground truth with a small simulated deformation.
+]
+
+--
+
+$$\mathrm{IoU}\_c = \frac{|P\_c \cap G\_c|}{|P\_c \cup G\_c|} = \frac{TP\_c}{TP\_c + FP\_c + FN\_c}$$
+
+--
+
+- $P\_c$: pixels predicted as class $c$, $G\_c$: ground truth pixels of class $c$
+- Green: true positives $TP$, red: false positives $FP$ and false negatives $FN$
+
+--
+
+- **Higher is better**: from $0$ (no overlap) to $1$ (perfect match)
+
+---
+# Mean IoU (mIoU)
+
+.center[
+          <img src="images/twocats_miou.jpg" style="width: 740px;" />
+]
+
+.footnote.small[
+Illustration: the prediction is the ground truth with a small simulated deformation.
+]
+
+--
+
+$$\mathrm{mIoU} = \frac{1}{C} \sum\_{c=1}^{C} \mathrm{IoU}\_c$$
+
+--
+
+- **Higher is better**: from $0$ to $1$, each class counts the same whatever its size
+- $TP$, $FP$ and $FN$ are summed over the whole evaluation set first
+- Not differentiable: used for evaluation, not as a training loss
+
+---
 ## State-of-the-art & links
 
 Recent models and checkpoints for segmentation can be browsed here:
