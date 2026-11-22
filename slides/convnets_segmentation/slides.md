@@ -407,4 +407,12 @@ $$\mathrm{mIoU} = \frac{1}{C} \sum\_{c=1}^{C} \mathrm{IoU}\_c$$
 
 --
 
+State-of-the-art models and checkpoints for image segmentation:
+
+.center[
+https://huggingface.co/models?pipeline_tag=image-segmentation&sort=trending
+]
+
+--
+
 Next lecture: object detection and instance segmentation

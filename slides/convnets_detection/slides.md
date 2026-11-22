@@ -16,6 +16,7 @@ Adapted from [Charles Ollion and Olivier Grisel](https://github.com/m2dsupsdlcla
 
 - Fully convolutional networks: one class score per pixel, for any image size
 - Transposed convolutions and skip connections (U-Net): recover fine spatial resolution
+- Strided operations downscale the feature maps (typically $32\times$): small objects get few cells
 
 --
 
@@ -47,7 +48,7 @@ One box and one class for each object: *where* is each object?
 
 --
 
-### Measuring performance
+### Measuring Performance
 
 ---
 class: middle, center
@@ -68,6 +69,26 @@ class: middle, center
 
 --
 - Evaluate via Intersection over Union (IoU)
+
+---
+# Intersection over Union (IoU)
+
+.center[
+          <img src="images/twocats_box_iou.jpg" style="width: 690px;" />
+]
+
+.footnote.small[
+Illustration: the predicted box is the ground truth box shifted by a few pixels. Same definition as for segmentation masks.
+]
+
+--
+
+$$\mathrm{IoU} = \frac{|P \cap G|}{|P \cup G|} = \frac{\text{area of the overlap}}{\text{area of the union}}$$
+
+--
+
+- **Higher is better**: from $0$ (no overlap) to $1$ (perfect match)
+- A predicted box is usually considered correct if $\mathrm{IoU} > 0.5$
 
 ---
 # Localization as regression
@@ -122,7 +143,29 @@ $C$ classes, $4$ output dimensions ($1$ box)
 **Predict exactly $N$ objects:** predict $(N \times 4)$ coordinates and $(N \times K)$ class scores
 
 ---
-#Object detection
+# Training Objective
+
+For one object, with predicted class probabilities $\hat{p}$, true class $c$, predicted box $\hat{b}$ and true box $b$:
+
+$$\mathcal{L} = \underbrace{-\log \hat{p}\_c}\_{\text{classification}} + \lambda \, \underbrace{\mathcal{L}\_{box}(\hat{b}, b)}\_{\text{localization}}$$
+
+--
+
+- **Classification**: cross-entropy, as for image classification
+- **Localization**: regression loss on the box coordinates $(x, y, w, h)$, for instance L2, L1 or smooth L1
+- $\lambda$ balances the two terms
+
+--
+
+**Lower is better**: the two heads are trained to minimize this loss
+
+---
+class: middle, center
+
+# Detection Algorithms
+
+---
+# From Localization to Detection
 
 We don't know in advance the number of objects in the image. Object detection relies on *object proposal* and *object classification*
 
@@ -157,26 +200,20 @@ For each cell of the $S \times S$ predict:
 ---
 # YOLO
 .center[
-          <img src="images/yolo1.png" style="width: 500px;" />
+          <img src="images/yolo1.png" style="width: 430px;" />
 ]
 
 For each cell of the $S \times S$ predict:
 - $B$ **boxes** and **confidence scores** $\text{conf}$ ($5 \times B$ values) + **class probabilities** $p(c)$ for each of the $C$ classes
 
-.footnote.small[
-Redmon, Joseph, et al. "You only look once: Unified, real-time object detection." CVPR (2016)
-]
----
-# YOLO
-.center[
-          <img src="images/yolo1.png" style="width: 500px;" />
-]
+--
 
 Final detections: $\text{conf}_j \times p(c) > \text{threshold}$
 
 .footnote.small[
 Redmon, Joseph, et al. "You only look once: Unified, real-time object detection." CVPR (2016)
 ]
+
 
 ---
 # YOLO
@@ -195,6 +232,49 @@ Redmon, Joseph, et al. "You only look once: Unified, real-time object detection.
 ]
 
 ---
+# Non-Maximum Suppression (NMS)
+
+.center[
+          <img src="images/twocats_nms.jpg" style="width: 720px;" />
+]
+
+.footnote.small[
+Illustration: the redundant boxes are simulated by jittering the ground truth boxes.
+]
+
+--
+
+Detectors output several overlapping boxes for the same object. For each class:
+
+1. Keep the box with the highest score
+2. Suppress the boxes whose $\mathrm{IoU}$ with it is above a threshold (for instance $0.5$)
+3. Repeat with the remaining boxes
+
+--
+
+Boxes of different objects overlap less, so they are kept.
+
+---
+# Anchor Boxes
+
+.center[
+          <img src="images/twocats_anchors.jpg" style="width: 370px;" />
+]
+
+.footnote.small[
+Anchors at one location of a feature map with stride $32$: $3$ scales and $3$ aspect ratios. Dashed blue: ground truth box.
+]
+
+--
+
+- At each location of the feature map: $k$ **anchor boxes** with predefined sizes and aspect ratios ($k = 9$ here)
+- The network predicts for each anchor a score and offsets that refine the box
+
+--
+
+- In training, an anchor is **positive** if its $\mathrm{IoU}$ with a ground truth box is high enough (orange: $0.79$ with the left cat)
+
+---
 # RetinaNet
 
 .center[
@@ -208,7 +288,7 @@ Lin, Tsung-Yi, et al. "Focal loss for dense object detection." ICCV 2017.
 --
 
 Single stage detector with:
-- Multiple scales through a *Feature Pyramid Network*
+- Multiple scales through a *Feature Pyramid Network*: a top-down path with lateral connections, as the U-Net skip connections
 - Focal loss to manage imbalance between background and real objects
 
 --
@@ -256,6 +336,46 @@ Ren, Shaoqing, et al. "Faster r-cnn: Towards real-time object detection with reg
 Region proposal input is a fully convolutional network (see the previous lecture): shares weights across spatial dimensions
 
 ---
+# DETR: Set Prediction
+
+.center[
+          <img src="images/detr.png" style="width: 760px;" />
+]
+
+.footnote.small[
+Carion, Nicolas, et al. "End-to-end object detection with transformers." ECCV 2020
+]
+
+--
+
+- A fixed set of $N$ learned **object queries**: each one predicts a box and a class, or "no object"
+- No anchors and no NMS: the training loss discourages duplicate predictions
+
+---
+# Training Objective for Detection
+
+Each anchor or region proposal is matched to the ground truth with the $\mathrm{IoU}$:
+
+- **Positive** if $\mathrm{IoU} > 0.5$ with a ground truth box: class and box targets
+- **Negative** if $\mathrm{IoU} < 0.4$ with all the boxes: class "background"
+
+--
+
+$$\mathcal{L} = \sum\_{i} \mathcal{L}\_{cls}(\hat{p}\_i, c\_i) + \lambda \sum\_{i \in \text{positives}} \mathcal{L}\_{box}(\hat{b}\_i, b\_i)$$
+
+--
+
+- $\mathcal{L}\_{cls}$: cross-entropy (focal loss in RetinaNet), $\mathcal{L}\_{box}$: smooth L1
+- Mask R-CNN adds a per-pixel binary cross-entropy on the masks
+- DETR: one-to-one Hungarian matching instead of IoU thresholds
+- **Lower is better**
+
+---
+class: middle, center
+
+# Instance Segmentation
+
+---
 # Instance Segmentation
 
 .center[
@@ -266,11 +386,11 @@ One mask and one class for each object: *which pixels* belong to each object?
 
 --
 
-- **Semantic segmentation**: no distinction between instances
-- **Instance segmentation**: one mask per object (two cats are two instances)
+- Unlike semantic segmentation, the two cats are two instances
+- **Panoptic segmentation** combines both (see the previous lecture)
 
 --
-- Can be done with **object detection** + **segmentation**: predict a mask in each detected box
+- Can be done with **object detection** + a **mask** for each detected box
 
 ---
 # Mask R-CNN
@@ -299,7 +419,7 @@ He, Kaiming, et al. "Mask R-CNN." International Conference on Computer Vision (I
 
 --
 
-- Mask results are still coarse (low mask resolution)
+- Mask results are still coarse: the mask head predicts a small mask ($28 \times 28$) for each box
 - Excellent instance generalization
 
 ---
@@ -315,15 +435,58 @@ He, Kaiming, et al. "Mask R-CNN." International Conference on Computer Vision (I
 ]
 
 ---
-## Measuring performance
+class: middle, center
+
+# Measuring Performance
+
+---
+# Precision and Recall
+
+For one class, a predicted box is a **true positive** (TP) if its class is right and its $\mathrm{IoU}$ with a ground truth box not matched yet is above a threshold (for instance $0.5$). Otherwise it is a **false positive** (FP). A ground truth object that is not matched is a **false negative** (FN).
+
+--
+
+$$\mathrm{Precision} = \frac{TP}{TP + FP} \qquad \mathrm{Recall} = \frac{TP}{TP + FN}$$
+
+--
+
+- **Precision**: which fraction of the predicted boxes are correct?
+- **Recall**: which fraction of the ground truth objects are found?
+- **Higher is better** for both
+
+---
+# Average Precision (AP)
+
+.center[
+          <img src="images/ap_example.jpg" style="width: 740px;" />
+]
+
+--
+
+- Sort the detections of one class by decreasing confidence: each rank gives one point (recall, precision)
+- $\mathrm{AP}$ is the area under the precision envelope of this curve: **higher is better**, from $0$ to $1$
+
+---
+# Mean Average Precision (mAP)
+
+$$\mathrm{mAP} = \frac{1}{C} \sum\_{c=1}^{C} \mathrm{AP}\_c$$
+
+--
+
+- **Higher is better**, from $0$ to $1$
+- COCO benchmark: AP averaged over $10$ IoU thresholds, from $0.5$ to $0.95$ (mAP@[0.5:0.95])
+- Also reported for small, medium and large objects: $\mathrm{AP}\_s$, $\mathrm{AP}\_m$, $\mathrm{AP}\_l$
+
+--
+
+- Instance segmentation: same metric with the $\mathrm{IoU}$ of the masks instead of the boxes (mask AP)
+
+---
+# Results on COCO
 
 .center[
           <img src="images/sotaresults2.png" style="width: 720px;" />
 ]
-
-Measures: mean Average Precision **mAP** at given **IoU** thresholds
-
-- Average Precision: area under the Precision-Recall curve for one class and on IoU threshold.
 
 .footnote.small[
 Zeming Li et al. Light-Head R-CNN: In Defense of Two-Stage Object Detector 2017
@@ -331,14 +494,27 @@ Zeming Li et al. Light-Head R-CNN: In Defense of Two-Stage Object Detector 2017
 
 --
 
-- AP @0.5 for class "cat": average precision for the class, where $IoU(box^{pred}, box^{true}) > 0.5$
+- Metric: mAP@[0.5:0.95], higher is better
+- Small objects are the hardest: $\mathrm{AP}\_s$ is much lower than $\mathrm{AP}\_l$ for all the methods
+
+---
+# Panoptic Quality (PQ)
+
+For panoptic segmentation, a predicted and a ground truth segment match if their $\mathrm{IoU}$ is above $0.5$:
+
+$$\mathrm{PQ} = \frac{\sum\_{(p, g) \in \mathrm{TP}} \mathrm{IoU}(p, g)}{|\mathrm{TP}| + \frac{1}{2}|\mathrm{FP}| + \frac{1}{2}|\mathrm{FN}|}$$
 
 --
 
-- mAP: average AP values for all classes.
+- Numerator: $\mathrm{IoU}$ of the matched segments. Denominator: also penalizes the predicted segments without match (FP) and the ground truth segments without match (FN)
+- **Higher is better**, from $0$ to $1$
+
+.footnote.small[
+Kirillov et al., "Panoptic Segmentation", CVPR 2019
+]
 
 ---
-## State-of-the-art
+# State-of-the-art
 
 - Larger image sizes, larger and better models
 - New architectures: transformers with DETR/DINO losses, deformable convolutions...
@@ -350,15 +526,24 @@ Zeming Li et al. Light-Head R-CNN: In Defense of Two-Stage Object Detector 2017
 
 <br/>
 
-### Pytorch
+### PyTorch
 
 Detectron2 https://github.com/facebookresearch/detectron2
 
-- Mask-RCNN, Retina Net and other architectures
-- Focal loss, Feature Pyramid Networks, etc.
+- Mask R-CNN, RetinaNet and other architectures
+- Also available in `torchvision.models.detection`
 
 ---
-## Take away NN for Vision
+# Takeaways
+
+- **Detection**: one box and one class per object, from region proposals or from a dense grid of anchors
+- **Single-stage** (YOLO, RetinaNet) vs **two-stage** (Faster R-CNN): a trade-off between speed and accuracy
+- **IoU** matches predictions to the ground truth, in training and in evaluation. **NMS** removes duplicate boxes
+- **Instance segmentation**: detection plus a mask head (Mask R-CNN), **panoptic segmentation** adds the regions of the rest
+- **Evaluation**: AP per class averaged into mAP over IoU thresholds, higher is better
+
+---
+# Transfer Learning for Vision
 
 ### Pre-trained features as a basis
 
