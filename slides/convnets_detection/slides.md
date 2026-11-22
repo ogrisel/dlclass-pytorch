@@ -136,7 +136,7 @@ class: middle, center
 - Predict coordinates of a bounding box `(x, y, w, h)`
 
 --
-- Evaluate via Interection over Union (IoU)
+- Evaluate via Intersection over Union (IoU)
 
 ---
 # Localization as regression
@@ -169,7 +169,7 @@ class: middle, center
 --
 
 - Use a pre-trained CNN on ImageNet (ex. ResNet)
-- The "Localization head" is trained seperately with regression
+- The "Localization head" is trained separately with regression
 
 --
 - Possible end-to-end finetuning of both tasks
@@ -221,7 +221,7 @@ Redmon, Joseph, et al. "You only look once: Unified, real-time object detection.
 --
 
 For each cell of the $S \times S$ predict:
-- $B$ **boxes** and **confidence scores** $C$ ($5 \times B$ values) + **classes** $c$
+- $B$ **boxes** and **confidence scores** $\text{conf}$ ($5 \times B$ values) + **class probabilities** $p(c)$ for each of the $C$ classes
 
 ---
 # YOLO
@@ -230,7 +230,7 @@ For each cell of the $S \times S$ predict:
 ]
 
 For each cell of the $S \times S$ predict:
-- $B$ **boxes** and **confidence scores** $C$ ($5 \times B$ values) + **classes** $c$
+- $B$ **boxes** and **confidence scores** $\text{conf}$ ($5 \times B$ values) + **class probabilities** $p(c)$ for each of the $C$ classes
 
 .footnote.small[
 Redmon, Joseph, et al. "You only look once: Unified, real-time object detection." CVPR (2016)
@@ -241,7 +241,7 @@ Redmon, Joseph, et al. "You only look once: Unified, real-time object detection.
           <img src="images/yolo1.png" style="width: 500px;" />
 ]
 
-Final detections: $C_j * prob(c) > \text{threshold}$
+Final detections: $\text{conf}_j \times p(c) > \text{threshold}$
 
 .footnote.small[
 Redmon, Joseph, et al. "You only look once: Unified, real-time object detection." CVPR (2016)
@@ -282,25 +282,24 @@ Single stage detector with:
 
 --
 
-See this [post](https://towardsdatascience.com/review-retinanet-focal-loss-object-detection-38fba6afabe4) for more information
+See the [RetinaNet](https://arxiv.org/abs/1708.02002) and [Feature Pyramid Network](https://arxiv.org/abs/1612.03144) papers for more information
 
 ---
 # Box proposals
 
-Instead of having a predefined set of box proposals, find them on the image:
+Instead of having a fixed set of box proposals, learn to find them on the image:
 
 **Region Proposal Network**
 
-- Inputs:
-  - coarse convolutional feature map
-  - number $N$ of regions of interest
-- Output: tensor of $N$ box coordinates and objectness scores at each location in the feature map
+- Input: coarse convolutional feature map
+- Output: at each location of the feature map, for each of $k$ predefined **anchor boxes**: an objectness score and box coordinate offsets
+- Keep only the top $N$ boxes (after non-maximum suppression) as regions of interest
 
 --
 
 **Crop-and-resize** the feature map to feed positively classified boxes to a classification network
 - Using a dedicated "RoI pooling" / "RoI align" layer
-- Allows to propagate gradient only on interesting regions
+- Allows to share the backbone computation and to train the head only on a sampled subset of regions
 
 ---
 # Faster-RCNN
@@ -318,7 +317,8 @@ Ren, Shaoqing, et al. "Faster r-cnn: Towards real-time object detection with reg
 - Train jointly **RPN** and the classification head
 
 --
-- 200 box proposals, gradient propagated only in positive boxes
+- A few hundred box proposals (e.g. 300 in the paper) are kept at test time
+- The head is trained on a sample of positive and negative (background) proposals; the box regression loss only applies to positive ones
 
 
 ???
@@ -354,4 +354,4 @@ Zeming Li et al. Light-Head R-CNN: In Defense of Two-Stage Object Detector 2017
 - New architectures: transformers with DETR/DINO losses, deformable convolutions...
 - Better augmented data, unsupervised pretraining
 - Dataset curation
-- https://paperswithcode.com/sota/object-detection-on-coco
+- https://huggingface.co/models?pipeline_tag=object-detection&sort=trending

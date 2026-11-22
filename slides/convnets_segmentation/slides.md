@@ -1,6 +1,6 @@
 class: center, middle
 
-# Convolutional for Semantic and Object Segmentation
+# Convolutional Neural Networks for Semantic and Instance Segmentation
 
 Olivier Grisel
 
@@ -53,7 +53,7 @@ Long, Jonathan, et al. "Fully convolutional networks for semantic segmentation."
 - Aggregate maps from several convolutions at different scales for more robust results
 
 ---
-# Segmentation with Deconvolutions
+# Segmentation with Transposed Convolutions
 
 .center[
           <img src="images/deconv.png" style="width: 650px;" />
@@ -65,7 +65,8 @@ Noh, Hyeonwoo, et al. "Learning deconvolution network for semantic segmentation.
 
 --
 
-- "Deconvolution": transposed convolutions
+- **Transposed convolutions** (sometimes called "deconvolutions", e.g. in the paper above) learn to **upsample** feature maps
+- Despite the name, they do not invert a convolution: they only restore the spatial resolution
 
 .center[
           <img src="images/conv_deconv.png" style="width: 350px;" />
@@ -89,35 +90,35 @@ Ronneberger, Olaf et al., "U-Net: Convolutional Networks for Biomedical Image Se
 ]
 
 --
-- **Skip connections** between corresponding convolution and deconvolution layers
+- **Skip connections** between corresponding convolution and transposed convolution layers
 
 --
-- Copy and concatenate the last feature map of the same resolution to the output of the matching deconvolution layer.
+- Copy and concatenate the last feature map of the same resolution to the output of the matching transposed convolution layer.
 
 
 ---
-# Semantic Segmentation with Mask-RCNN
+# Instance Segmentation with Mask R-CNN
 
 .center[
           <img src="images/maskrcnn.png" style="width: 760px;" />
 ]
 
 .footnote.small[
-K. He and al. Mask Region-based Convolutional Network (Mask R-CNN) NIPS 2017
+He, Kaiming, et al. "Mask R-CNN." International Conference on Computer Vision (ICCV), 2017.
 ]
 
 --
 
 Faster-RCNN architecture with a third, binary mask head
 ---
-# Semantic Segmentation with Mask-RCNN
+# Instance Segmentation with Mask R-CNN
 
 .center[
           <img src="images/maskrcnnresults.png" style="width: 760px;" />
 ]
 
 .footnote.small[
-K. He and al. Mask Region-based Convolutional Network (Mask R-CNN) NIPS 2017
+He, Kaiming, et al. "Mask R-CNN." International Conference on Computer Vision (ICCV), 2017.
 ]
 
 --
@@ -126,7 +127,7 @@ K. He and al. Mask Region-based Convolutional Network (Mask R-CNN) NIPS 2017
 - Excellent instance generalization
 
 ---
-# Semantic Segmentation with Mask-RCNN
+# Instance Segmentation with Mask R-CNN
 
 
 .center[
@@ -134,15 +135,15 @@ K. He and al. Mask Region-based Convolutional Network (Mask R-CNN) NIPS 2017
 ]
 
 .footnote.small[
-He, Kaiming, et al. "Mask r-cnn." Internal Conference on Computer Vision (ICCV), 2017.
+He, Kaiming, et al. "Mask R-CNN." International Conference on Computer Vision (ICCV), 2017.
 ]
 ---
 ## State-of-the-art & links
 
-Most benchmarks and recent architectures are reported here:
+Recent models and checkpoints for segmentation can be browsed here:
 
 .center[
-https://paperswithcode.com/area/computer-vision
+https://huggingface.co/tasks/image-segmentation
 ]
 
 --
