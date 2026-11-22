@@ -16,17 +16,17 @@ python3 -m http.server 8000
 
 Then open one of these URLs in Firefox (or any other browser):
 
-- Object detection: <http://localhost:8000/convnets_detection/>
-- Semantic and instance segmentation: <http://localhost:8000/convnets_segmentation/>
+- Semantic segmentation: <http://localhost:8000/convnets_segmentation/>
+- Object detection and instance segmentation: <http://localhost:8000/convnets_detection/>
 
 To open them directly from a terminal:
 
 ```sh
 # macOS
-open -a Firefox http://localhost:8000/convnets_detection/
+open -a Firefox http://localhost:8000/convnets_segmentation/
 
 # Linux
-firefox http://localhost:8000/convnets_detection/
+firefox http://localhost:8000/convnets_segmentation/
 ```
 
 Stop the server with `Ctrl+C`. Navigate the slides with the arrow keys, or

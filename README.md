@@ -1,8 +1,8 @@
 # PyTorch version of my Deep Learning class
 
 ## Slides
-- [Convolutional Neural Networks for Object Detection](https://ogrisel.github.io/dlclass-pytorch/slides/convnets_detection)
-- [Convolutional Neural Networks for Semantic and Instance Segmentation](https://ogrisel.github.io/dlclass-pytorch/slides/convnets_segmentation)
+- [Convolutional Neural Networks for Semantic Segmentation](https://ogrisel.github.io/dlclass-pytorch/slides/convnets_segmentation)
+- [Convolutional Neural Networks for Object Detection and Instance Segmentation](https://ogrisel.github.io/dlclass-pytorch/slides/convnets_detection)
 - [Recommender Systems](https://ogrisel.github.io/dlclass-pytorch/slides/recsys)
 - [NLP - Word Embeddings](https://ogrisel.github.io/dlclass-pytorch/slides/nlp-word-embeddings)
 - [NLP - Language Modeling with Recurrent Neural Networks](https://ogrisel.github.io/dlclass-pytorch/slides/nlp-recurrent-networks)

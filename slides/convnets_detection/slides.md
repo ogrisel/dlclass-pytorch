@@ -1,7 +1,7 @@
 
 class: center, middle
 
-# Convolutional Neural Networks for Object Detection
+# Convolutional Neural Networks for Object Detection and Instance Segmentation
 
 Olivier Grisel
 
@@ -11,65 +11,6 @@ Adapted from [Charles Ollion and Olivier Grisel](https://github.com/m2dsupsdlcla
 
 
 
----
-# CNNs for computer Vision
-
-.center[
-          <img src="images/vision.png" style="width: 600px;" />
-]
-
----
-# Beyond Image Classification
-
-### CNNs
-- Previous lecture: image classification
-
---
-
-### Limitations
-- Mostly on centered images
-- Only a single object per image
-- Not enough for many real world vision tasks
-
----
-# Beyond Image Classification
-
-
-.center[
-          <br/>
-          <img src="images/cls_1.png" style="width: 800px;" />
-]
-
----
-# Beyond Image Classification
-
-
-.center[
-          <br/>
-          <img src="images/cls_2.png" style="width: 800px;" />
-]
----
-# Beyond Image Classification
-
-.center[
-          <br/>
-          <img src="images/cls_3.png" style="width: 800px;" />
-]
----
-# Beyond Image Classification
-
-
-.center[
-          <br/>
-          <img src="images/cls_4_2.png" style="width: 800px;" />
-]
----
-# Beyond Image Classification
-
-.center[
-          <br/>
-          <img src="images/cls_4_3.png" style="width: 800px;" />
-]
 ---
 # Outline
 
@@ -89,34 +30,6 @@ Adapted from [Charles Ollion and Olivier Grisel](https://github.com/m2dsupsdlcla
 *next time*:
 
 ### Semantic & Instance Segmentation
-
----
-class: middle, center
-
-# Feature Maps and Fully Convolutional Networks
-
----
-# Convolutionization of a Classification Network
-
-.center[
-  <img src="images/convolutionalization.png" style="width: 400px;" />
-]
-
-.footnote.small[
-Long, Jonathan, et al. "Fully convolutional networks for semantic segmentation." CVPR 2015
-]
-
-- Slide the network with an input of `(224, 224)` over a larger image. Output of varying spatial size
---
-
-- **Convolutionize**: 
-
-   - remove global average pooling and flattening layers
-   - replace `Linear(2048, 1000)` to $1 \times 1$ `Conv2d(2048, 1000, kernel_size=1)`
-
-
-???
-output map upscaled from fully convolutional network
 
 ---
 class: middle, center
@@ -325,6 +238,48 @@ Ren, Shaoqing, et al. "Faster r-cnn: Towards real-time object detection with reg
 Region proposal input is a fully convolutional network: shares weights across spatial dimensions
 
 ---
+# Instance Segmentation with Mask R-CNN
+
+.center[
+          <img src="images/maskrcnn.png" style="width: 760px;" />
+]
+
+.footnote.small[
+He, Kaiming, et al. "Mask R-CNN." International Conference on Computer Vision (ICCV), 2017.
+]
+
+--
+
+Faster-RCNN architecture with a third, binary mask head
+---
+# Instance Segmentation with Mask R-CNN
+
+.center[
+          <img src="images/maskrcnnresults.png" style="width: 760px;" />
+]
+
+.footnote.small[
+He, Kaiming, et al. "Mask R-CNN." International Conference on Computer Vision (ICCV), 2017.
+]
+
+--
+
+- Mask results are still coarse (low mask resolution)
+- Excellent instance generalization
+
+---
+# Instance Segmentation with Mask R-CNN
+
+
+.center[
+          <img src="images/maskrcnnresults2.png" style="width: 760px;" />
+]
+
+.footnote.small[
+He, Kaiming, et al. "Mask R-CNN." International Conference on Computer Vision (ICCV), 2017.
+]
+
+---
 ## Measuring performance
 
 .center[
@@ -355,3 +310,30 @@ Zeming Li et al. Light-Head R-CNN: In Defense of Two-Stage Object Detector 2017
 - Better augmented data, unsupervised pretraining
 - Dataset curation
 - https://huggingface.co/models?pipeline_tag=object-detection&sort=trending
+
+---
+## Take away NN for Vision
+
+### Pre-trained features as a basis
+
+- ImageNet: centered objects, very broad image domain
+- 1M+ labels and many different classes resulting in very **general** and **disentangling** representations
+- Better Networks (i.e. ResNet vs VGG) have **a huge impact**
+- Recent alternatives: self-supervised learning (more on this later)
+
+--
+
+### Transfer learning and fine tuning
+
+Goal: make use of a smaller dataset but with richer labels:
+
+- object bounding boxes, object classes, instance masks...
+
+--
+
+Steps:
+
+- Remove the last layer(s) of a model pretrained on ImageNet (for instance)
+- Add new layers that match the output shape of the new labels
+- **Transfer learning**: fit only the last layers to the new dataset
+- or **Fine tune** the whole architecture end-to-end
