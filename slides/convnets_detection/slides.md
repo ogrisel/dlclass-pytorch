@@ -24,6 +24,24 @@ Adapted from [Charles Ollion and Olivier Grisel](https://github.com/m2dsupsdlcla
 - No box or position is given for each object
 
 ---
+# Localization and Object Detection
+
+
+.center[
+          <br/>
+          <img src="images/cls_4_2.png" style="width: 800px;" />
+]
+
+---
+# Object Detection vs Instance Segmentation
+
+
+.center[
+          <br/>
+          <img src="images/cls_4_3.png" style="width: 800px;" />
+]
+
+---
 # Outline
 
 ### Simple Localization as regression

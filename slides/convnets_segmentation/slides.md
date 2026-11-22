@@ -40,33 +40,12 @@ Adapted from [Charles Ollion and Olivier Grisel](https://github.com/m2dsupsdlcla
 ]
 
 ---
-# Beyond Image Classification
+# From Classification to Semantic Segmentation
 
 
 .center[
           <br/>
-          <img src="images/cls_2.png" style="width: 800px;" />
-]
----
-# Beyond Image Classification
-
-.center[
-          <br/>
-          <img src="images/cls_3.png" style="width: 800px;" />
-]
----
-# Beyond Image Classification
-
-.center[
-          <br/>
-          <img src="images/cls_4_2.png" style="width: 800px;" />
-]
----
-# Beyond Image Classification
-
-.center[
-          <br/>
-          <img src="images/cls_4_3.png" style="width: 800px;" />
+          <img src="images/cls_semseg.png" style="width: 800px;" />
 ]
 
 ---
